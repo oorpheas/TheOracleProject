@@ -1,0 +1,4 @@
+[ LISTA DE COISAS PARA FAZER NO BOT ]
+    1. Importar comandos do BotGhost;
+    2. Criar mensagens padrões da Rádio;
+    3. Webhooks de Automação;
