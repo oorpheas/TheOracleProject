@@ -38,6 +38,7 @@ import config
 import discord
 import random
 import embed
+import requisitions
 
 # especificações da biblioteca importada 
 
@@ -74,30 +75,41 @@ async def ping(Oracle: Interaction):
 async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Role, action: str):
     # já possui o cargo e quer adicionar
     if (role in member.roles and action == "add" ):
-        embed_modrole = embed.Embed("REQUISIÇÃO_INVÁLIDA # 400", "Este usuário já possui este cargo! Tente outro usuário ou outra função.", delete_after=15)
+        embed_modrole = embed.Embed(
+            (requisitions.REQ400), 
+            "Este usuário já possui este cargo! Tente outro usuário ou outra função.")
         embed_modrole.create()
-        await Oracle.response.send_message(embed=embed_modrole)
+        await Oracle.response.send_message(embed=embed_modrole, delete_after=20)
     # é possivel adicionar
     elif (role not in member.roles and action == "add"):
         await member.add_roles(role)
-        embed_modrole = embed.Embed("SUCESSO # 200", "🔓 {member.mention} recebeu acesso as depedencias relacionadas a {role.mention}.", delete_after=30)
+        embed_modrole = embed.Embed(
+            (requisitions.REQ200), 
+            f"🔓 {member.mention} recebeu acesso as depedencias relacionadas a **{role.name.upper()}**.")
         embed_modrole.create()
         await Oracle.response.send_message(embed=embed_modrole)
     # não possui o cargo e quer remover
-    elif (role in member.roles and action == "remove"):
-        embed_modrole = embed.Embed("REQUISIÇÃO_INVÁLIDA # 400", "Este usuário não possui este cargo! Tente outro usuário ou outra função.", delete_after=15)
-        embed_modrole.create()
-        await Oracle.response.send_message(embed=embed_modrole)
-    # é possivel remover
     elif (role not in member.roles and action == "remove"):
-        embed_modrole = embed.Embed("SUCESSO # 200", "🔓 {member.mention} perdeu acesso as depedencias relacionadas a {role.mention}.", delete_after=30)
+        embed_modrole = embed.Embed(
+            (requisitions.REQ400), 
+            "Este usuário não possui este cargo! Tente outro usuário ou outra função.")
+        embed_modrole.create()
+        await Oracle.response.send_message(embed=embed_modrole, delete_after=20)
+    # é possivel remover
+    elif (role in member.roles and action == "remove"):
+        await member.remove_roles(role)
+        embed_modrole = embed.Embed(
+            (requisitions.REQ200), 
+            f"🔓 {member.mention} perdeu acesso as depedencias relacionadas a **{role.name.upper()}**.")
         embed_modrole.create()
         await Oracle.response.send_message(embed=embed_modrole)
     # função não existe
     elif (action != "remove" and action != "add"):
-        embed_modrole = embed.Embed("REQUISIÇÃO_INVÁLIDA # 400", "Peço desculpas, posso apenas adicionar (add) ou remover (remove). Poderia tentar novamente?", delete_after=15)
+        embed_modrole = embed.Embed(
+            (requisitions.REQ400), 
+            "Peço desculpas, posso apenas adicionar (add) ou remover (remove). Poderia tentar novamente?")
         embed_modrole.create()
-        await Oracle.response.send_message(embed=embed_modrole)
+        await Oracle.response.send_message(embed=embed_modrole, delete_after=20)
 
 
 # iniciador
