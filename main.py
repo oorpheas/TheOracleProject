@@ -30,13 +30,13 @@
 #
 # //
 
-# aqui importamos a >congif< (onde você  irá colocar o token  do 
-# seu bot) e a biblioteca do discord;
+# importações
 
 import os
 import discord
 import random
-import embed
+import dev
+import requests
 
 # especificações da biblioteca importada 
 
@@ -66,7 +66,7 @@ async def on_ready():
     print(". . . . . . . .  . . . . . . .  . . . . . .")
 
 # ping check !
-    
+
 @oracle.tree.command(name="ping", description="mostra o tempo de resposta atual.")
 async def ping(Oracle: Interaction):
     bot_latency = round(oracle.latency*1000)
@@ -77,43 +77,49 @@ async def ping(Oracle: Interaction):
 @oracle.tree.command(name="modrole", description="gerencia os cargos de outro usuário.")
 @commands.has_role(os.getenv('EQUIPE_ROLE_ID'))
 async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Role, action: str):
+
     # já possui o cargo e quer adicionar
+
     if (role in member.roles and action == "add" ):
-        embed_modrole = embed.Embed(
+        embed_modrole = dev.Embed(
             (os.getenv('REQ400')), 
             "Este usuário já possui este cargo! Tente outro usuário ou outra função.")
         embed_modrole.create()
         await Oracle.response.send_message(embed=embed_modrole, delete_after=20)
 
     # é possivel adicionar
+
     elif (role not in member.roles and action == "add"):
         await member.add_roles(role)
-        embed_modrole = embed.Embed(
+        embed_modrole = dev.Embed(
             (os.getenv('REQ200')), 
             f"🔓 {member.mention} recebeu acesso as depedencias relacionadas a **{role.name.upper()}**.")
         embed_modrole.create()
         await Oracle.response.send_message(embed=embed_modrole)
 
     # não possui o cargo e quer remover
+
     elif (role not in member.roles and action == "remove"):
-        embed_modrole = embed.Embed(
+        embed_modrole = dev.Embed(
             (os.getenv('REQ400')), 
             "Este usuário não possui este cargo! Tente outro usuário ou outra função.")
         embed_modrole.create()
         await Oracle.response.send_message(embed=embed_modrole, delete_after=20)
 
     # é possivel remover
+
     elif (role in member.roles and action == "remove"):
         await member.remove_roles(role)
-        embed_modrole = embed.Embed(
+        embed_modrole = dev.Embed(
             (os.getenv('REQ200')), 
             f"🔓 {member.mention} perdeu acesso as depedencias relacionadas a **{role.name.upper()}**.")
         embed_modrole.create()
         await Oracle.response.send_message(embed=embed_modrole)
 
     # função não existe
+    
     elif (action != "remove" and action != "add"):
-        embed_modrole = embed.Embed(
+        embed_modrole = dev.Embed(
             (os.getenv('REQ400')), 
             "Peço desculpas, posso apenas adicionar (add) ou remover (remove). Poderia tentar novamente?")
         embed_modrole.create()
@@ -122,4 +128,4 @@ async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Ro
 
 # iniciador
 
-oracle.run(os.getenv('TOKEN'))
+oracle.run(os.getenv('TOKEN_BOT'))
