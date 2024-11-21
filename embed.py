@@ -1,7 +1,10 @@
 import discord
-import config
+import os
 from datetime import datetime
-import storytelling
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Embed:
     def __init__(self, title= str, description= str):
@@ -13,8 +16,8 @@ class Embed:
                              timestamp= datetime.now())
     def create(self):
         self.embed.set_author(name="Oráculo",
-                        icon_url=(config.BOT_ICON))
-        self.embed.set_footer(text= storytelling.footer)
+                        icon_url=(os.getenv('BOT_ICON')))
+        self.embed.set_footer(text= os.getenv('footer'))
     
     def to_dict(self):
         return self.embed.to_dict()
