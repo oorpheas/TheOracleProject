@@ -2,3 +2,12 @@
     1. Importar comandos do BotGhost;
     2. Criar mensagens padrões da Rádio;
     3. Webhooks de Automação;
+
+
+[ COLUNAS NECESSÁRIAS AUTOMAÇÃO ]
+    1. Filtragem de Jogador;
+    2. Nome do Personagem;
+    3. Status da Cena (mudanças nesse status deve gerar uma mensagem);
+    4. Local da Cena;
+    5. Data da Cena;
+    6. Número da Cena;

@@ -34,9 +34,11 @@
 
 import os
 import discord
-import random
-import dev
+import infoData
+import api
 import requests
+import easier
+from notion_client import Client
 
 # especificações da biblioteca importada 
 
@@ -49,9 +51,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# definindo um prefix para comandos personalizados
+# inicializando Discord Bot e Notion API, definindo um prefix para comandos personalizados 
 
 oracle = commands.Bot(command_prefix="oracle$", intents= discord.Intents.all())
+asst_module = Client(auth=(os.getenv('API_TOKEN_NOTION')))
 
 # modlog para saber se o bot deu boot
 
@@ -81,7 +84,7 @@ async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Ro
     # já possui o cargo e quer adicionar
 
     if (role in member.roles and action == "add" ):
-        embed_modrole = dev.Embed(
+        embed_modrole = easier.Embed(
             (os.getenv('REQ400')), 
             "Este usuário já possui este cargo! Tente outro usuário ou outra função.")
         embed_modrole.create()
@@ -91,7 +94,7 @@ async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Ro
 
     elif (role not in member.roles and action == "add"):
         await member.add_roles(role)
-        embed_modrole = dev.Embed(
+        embed_modrole = easier.Embed(
             (os.getenv('REQ200')), 
             f"🔓 {member.mention} recebeu acesso as depedencias relacionadas a **{role.name.upper()}**.")
         embed_modrole.create()
@@ -100,7 +103,7 @@ async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Ro
     # não possui o cargo e quer remover
 
     elif (role not in member.roles and action == "remove"):
-        embed_modrole = dev.Embed(
+        embed_modrole = easier.Embed(
             (os.getenv('REQ400')), 
             "Este usuário não possui este cargo! Tente outro usuário ou outra função.")
         embed_modrole.create()
@@ -110,7 +113,7 @@ async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Ro
 
     elif (role in member.roles and action == "remove"):
         await member.remove_roles(role)
-        embed_modrole = dev.Embed(
+        embed_modrole = easier.Embed(
             (os.getenv('REQ200')), 
             f"🔓 {member.mention} perdeu acesso as depedencias relacionadas a **{role.name.upper()}**.")
         embed_modrole.create()
@@ -119,12 +122,16 @@ async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Ro
     # função não existe
     
     elif (action != "remove" and action != "add"):
-        embed_modrole = dev.Embed(
+        embed_modrole = easier.Embed(
             (os.getenv('REQ400')), 
             "Peço desculpas, posso apenas adicionar (add) ou remover (remove). Poderia tentar novamente?")
         embed_modrole.create()
         await Oracle.response.send_message(embed=embed_modrole, delete_after=20)
 
+#
+
+#@oracle.tree.command(name="att", description="atualiza seu banco de dados para")
+#@commands.has_role(os.getenv('EQUIPE_ROLE_ID'))
 
 # iniciador
 
