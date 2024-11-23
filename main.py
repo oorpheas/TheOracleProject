@@ -34,9 +34,7 @@
 
 import os
 import discord
-import infoData
 import api
-import requests
 import easier
 from notion_client import Client
 
@@ -57,6 +55,8 @@ oracle = commands.Bot(command_prefix="oracle$", intents= discord.Intents.all())
 asst_module = Client(auth=(os.getenv('API_TOKEN_NOTION')))
 
 # modlog para saber se o bot deu boot
+
+api.getData
 
 @oracle.event
 async def on_ready():

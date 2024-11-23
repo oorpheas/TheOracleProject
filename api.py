@@ -1,9 +1,7 @@
 # importações
 
-import discord
 import json
 import os
-import requests
 
 # especificações de importação
 
@@ -42,39 +40,60 @@ headers = {
 # listagem de informações do DataBase
 
 def getData():
-
-    res = asst_module.databases.query(
-        **{
-            "database_id": f"{database_url}",
-            "filter": {
-                "property": "Status",
-                "select": {
-                    "equals": "respondida",
+    #oracleStatus = True
+    #while oracleStatus == True:
+        res = asst_module.databases.query(
+            **{
+                "database_id": f"{database_url}",
+                "filter": {
+                    "property": "Status",
+                    "select": {
+                        "is_not_empty": True,
+                    },
                 },
-            },
-        }
-    )
+            }
+        )
 
-    with open("./infoData/res.json", "w", encoding='utf8') as file:
-        json.dump(res, file, ensure_ascii=False, indent=4)
+        results = res["results"]
 
-    results = res["results"]
-    return results
+        for i in results:
+            
+            # filtragem e seleção de dados
 
-info = getData()
-for i in info:
-    props = i["properties"]
-    charName = props["Personagem"]["title"][0]["text"]["content"]
-    player = props["Jogador ID"]["number"]
-    sceneStatus = props["Status"]["select"]["name"]
-    withWho = props["Companhia"]["rich_text"][0]["text"]["content"]
-    where = props["Local"]["select"]["name"]
-    scene = props["Cena"]["rich_text"][0]["text"]["content"]
-    dateAndTime = props["Dia e Hora"]["date"]["start"]
-    dateAndTime = datetime.fromisoformat(dateAndTime)
+            pageID = i["id"]
+            props = i["properties"]
+            sceneStatus = props["Status"]["select"]["name"]
+            dateAndTime = props["Dia e Hora"]["date"]["start"]
+            dateAndTime = datetime.fromisoformat(dateAndTime)
 
 
-print(charName, player, sceneStatus, withWho, where, scene, dateAndTime)
+            if os.path.isfile(f'./infoData/{pageID}.json') is True:
+                with open(f'./infoData/{pageID}.json', "r", encoding='utf8') as previousFile:
+                    verify = json.load(previousFile)
+
+                    changeRelevant = (sceneStatus != (verify["properties"]["Status"]["select"]["name"]))
+                    isClosed = (sceneStatus == "encerrada")
+
+                if changeRelevant is True and isClosed is False:
+                    os.remove(f'./infoData/{pageID}.json')
+                    
+                    with open(f'./infoData/{pageID}.json', "w", encoding='utf8') as file:
+                        json.dump(i, file, ensure_ascii= False, indent= 4)
+
+                elif changeRelevant is True and isClosed is True:
+                    os.remove(f'./infoData/{pageID}.json')
+
+                else:
+                    pass
+
+            else:
+                with open(f'./infoData/{pageID}.json', "w", encoding='utf8') as file:
+                    json.dump(i, file, ensure_ascii= False, indent= 4)         
+
+
+getData()
+
+
 
 
 
