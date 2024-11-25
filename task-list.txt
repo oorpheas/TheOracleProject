@@ -11,3 +11,7 @@
     4. Local da Cena;
     5. Data da Cena;
     6. Número da Cena;
+
+
+        dateAndTime = props["Dia e Hora"]["date"]["start"]
+        dateAndTime = datetime.fromisoformat(dateAndTime)

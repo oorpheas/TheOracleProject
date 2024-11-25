@@ -40,6 +40,9 @@ headers = {
 # listagem de informações do DataBase
 
 def getData():
+    
+    # chamada de banco de dados
+
     res = asst_module.databases.query(
         **{
             "database_id": f"{database_url}",
@@ -54,6 +57,8 @@ def getData():
 
     results = res["results"]
 
+    # loop de verificação de cenas existentes
+
     for i in results:
             
         # filtragem e seleção de dados
@@ -61,16 +66,24 @@ def getData():
         pageID = i["id"]
         props = i["properties"]
         sceneStatus = props["Status"]["select"]["name"]
-        dateAndTime = props["Dia e Hora"]["date"]["start"]
-        dateAndTime = datetime.fromisoformat(dateAndTime)
 
+        # verificações dos arquivos
+
+        # verifica se arquivo já existe
 
         if os.path.isfile(f'./infoData/{pageID}.json') is True:
             with open(f'./infoData/{pageID}.json', "r", encoding='utf8') as previousFile:
                 verify = json.load(previousFile)
 
+                # verifica se houve alteração no status da cena
+
                 changeRelevant = (sceneStatus != (verify["properties"]["Status"]["select"]["name"]))
+
+                #verifica se a cena foi fechada
+
                 isClosed = (sceneStatus == "encerrada")
+
+            # se não foi fechada, atualiza o arquivo a nova informação
 
             if changeRelevant is True and isClosed is False:
                 os.remove(f'./infoData/{pageID}.json')
@@ -78,14 +91,25 @@ def getData():
                 with open(f'./infoData/{pageID}.json', "w", encoding='utf8') as file:
                     json.dump(i, file, ensure_ascii= False, indent= 4)
 
+            # se foi fechada, deleta o arquivo. talvez precise alterar essa linha, para enviar mensagem de fechamento
+
             elif changeRelevant is True and isClosed is True:
                 os.remove(f'./infoData/{pageID}.json')
 
             else:
                 pass
+
+        # caso não exista arquivo criado com esse nome
+
         elif os.path.isfile(f'./infoData/{pageID}.json') is False:
+
+            # verifica se não é uma cena encerrada
+
             if sceneStatus == "encerrada":
                 pass
+
+            # cria nova cena
+
             else:
                 with open(f'./infoData/{pageID}.json', "w", encoding='utf8') as file:
                     json.dump(i, file, ensure_ascii= False, indent= 4)
