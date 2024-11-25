@@ -34,13 +34,13 @@
 
 import os
 import discord
-import api
+import NotionAPI
 import easier
 from notion_client import Client
 
 # especificações da biblioteca importada 
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord import Interaction
 from datetime import datetime
 from dotenv import load_dotenv
@@ -56,17 +56,33 @@ asst_module = Client(auth=(os.getenv('API_TOKEN_NOTION')))
 
 # modlog para saber se o bot deu boot
 
-api.getData
-
 @oracle.event
 async def on_ready():
     await oracle.tree.sync()
     await oracle.change_presence(activity=discord.activity.Game(name="aprendendo..."),
                                  status=discord.Status.online)
+    
+    sceneSystem.start()
 
-    print(". . . . . . . .  . . . . . . .  . . . . . .")
+
+    print(". . . . . . . . . . . . . . . . . . . . . . .")
     print(f"{oracle.user.name.upper()} está funcionando. ⚡")
-    print(". . . . . . . .  . . . . . . .  . . . . . .")
+
+
+# loop de coleta de dados
+
+@tasks.loop(seconds=60)
+async def sceneSystem():
+
+    print(". . . . . . . . . . . . . . . . . . . . . . .")
+    print("Módulo de Suporte está coletando dados. 📂")
+
+    NotionAPI.getData()
+
+    print(". . . . . . . . . . . . . . . . . . . . . . .")
+    print("Módulo de Suporte coletou dados 🗂️")
+
+
 
 # ping check !
 
@@ -136,3 +152,5 @@ async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Ro
 # iniciador
 
 oracle.run(os.getenv('TOKEN_BOT'))
+
+
