@@ -6,8 +6,6 @@ import os
 # especificações de importação
 
 from notion_client import Client
-from pprint import pprint
-from datetime import datetime
 from dotenv import load_dotenv
 
 # carregar informações protegidas
@@ -40,6 +38,7 @@ headers = {
 # listagem de informações do DataBase
 
 def getData():
+    isRelevant = False
     
     # chamada de banco de dados
 
@@ -79,22 +78,15 @@ def getData():
 
                 changeRelevant = (sceneStatus != (verify["properties"]["Status"]["select"]["name"]))
 
-                #verifica se a cena foi fechada
+            # atualiza o arquivo a nova informação
 
-                isClosed = (sceneStatus == "encerrada")
-
-            # se não foi fechada, atualiza o arquivo a nova informação
-
-            if changeRelevant is True and isClosed is False:
+            if changeRelevant is True:
                 os.remove(f'./infoData/{pageID}.json')
                 
                 with open(f'./infoData/{pageID}.json', "w", encoding='utf8') as file:
                     json.dump(i, file, ensure_ascii= False, indent= 4)
 
-            # se foi fechada, deleta o arquivo. talvez precise alterar essa linha, para enviar mensagem de fechamento
-
-            elif changeRelevant is True and isClosed is True:
-                os.remove(f'./infoData/{pageID}.json')
+                isRelevant = True
 
             else:
                 pass
@@ -113,6 +105,12 @@ def getData():
             else:
                 with open(f'./infoData/{pageID}.json', "w", encoding='utf8') as file:
                     json.dump(i, file, ensure_ascii= False, indent= 4)
+
+                isRelevant = True
+
+    return isRelevant
+
+
 
 
 

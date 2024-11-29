@@ -35,14 +35,15 @@
 import os
 import discord
 import NotionAPI
+import DiscordAPI
 import easier
-from notion_client import Client
+
 
 # especificações da biblioteca importada 
 
 from discord.ext import commands, tasks
 from discord import Interaction
-from datetime import datetime
+from notion_client import Client
 from dotenv import load_dotenv
 
 # carregar informações protegidas
@@ -64,23 +65,36 @@ async def on_ready():
     
     sceneSystem.start()
 
-
     print(". . . . . . . . . . . . . . . . . . . . . . .")
     print(f"{oracle.user.name.upper()} está funcionando. ⚡")
 
 
 # loop de coleta de dados
 
-@tasks.loop(seconds=60)
+@tasks.loop(seconds=30)
 async def sceneSystem():
 
     print(". . . . . . . . . . . . . . . . . . . . . . .")
     print("Módulo de Suporte está coletando dados. 📂")
 
-    NotionAPI.getData()
+    updateNeeded = NotionAPI.getData()
+    print(updateNeeded)
 
     print(". . . . . . . . . . . . . . . . . . . . . . .")
     print("Módulo de Suporte coletou dados 🗂️")
+
+    if (updateNeeded == True): 
+        print(". . . . . . . . . . . . . . . . . . . . . . .")
+        print("Módulo de Suporte está enviando dados. 📨")
+
+        DiscordAPI.sendData()
+
+        print(". . . . . . . . . . . . . . . . . . . . . . .")
+        print("Módulo de Suporte enviou dados 📫")
+    
+    else:
+        pass
+
 
 
 

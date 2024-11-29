@@ -29,4 +29,32 @@ class Embed:
     
     def to_dict(self):
         return self.embed.to_dict()
+
+class DataCorreted:
+    def __new__(self, date= str):
+        self.separator = date.split("T")
+        self.dateAndMonth = self.separator[0]
+        self.hoursRawAndDirty = self.separator[1]
+        self.hoursCleaner = self.hoursRawAndDirty.split(".")
+        self.hoursRaw = self.hoursCleaner[0]
+        self.hoursOrganizer = self.hoursRaw.split(":")
+        self.hoursAndMinuts = f"{self.hoursOrganizer[0]}:{self.hoursOrganizer[1]}"
+        self.solidAnswer = f"{self.dateAndMonth}/{self.hoursAndMinuts}"
+
+        return self.solidAnswer
     
+class isTimeDifferentRelevant:
+    def __new__(self, horaA= str, horaB= str):
+        self.minutsA = horaA.split(":")
+        self.hoursA = self.minutsA[0]
+        self.minutsA = self.minutsA[1]
+        self.minutsB = horaB.split(":")
+        self.hoursB = self.minutsB[0]
+        self.minutsB = self.minutsB[1]
+
+        if (self.hoursA == self.hoursB):
+            isRelevant = (int(self.minutsA) - int(self.minutsB) >= 3)
+        else:
+            isRelevant = True
+
+        return isRelevant
