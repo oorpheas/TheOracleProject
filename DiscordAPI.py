@@ -12,8 +12,13 @@ headers = {
 
 # envia mensagem de atualização
 
-def sendData(): 
+def sendData():
+
+    # declaração de booleanos com valor esperado
+
     verifyRelevant = False
+    isNew = True
+    isUpdated = False
 
     # leitura de diretório com arquivos de cena
 
@@ -56,7 +61,6 @@ def sendData():
 
             createdTime = infoFinder["created_time"]
             createdTime = easier.DataCorreted(createdTime)
-            print(createdTime)
             createdTimeEdit = createdTime.split("/")
             createdTime_Data = createdTimeEdit[0]
             createdTime_Time = createdTimeEdit[1]
@@ -65,7 +69,6 @@ def sendData():
 
             lastTime = infoFinder["last_edited_time"]
             lastTime = easier.DataCorreted(lastTime)
-            print(lastTime)
             lastTimeEdit = lastTime.split("/")
             lastTime_Data = lastTimeEdit[0]
             lastTime_Time = lastTimeEdit[1]
@@ -75,60 +78,91 @@ def sendData():
             else:
                 verifyRelevant = True
 
-        # abertura para coleta de jogadores registrados
-
-        with open('infoUsers.json', "r", encoding='utf8') as userFile:
-            rawUserData = json.load(userFile)
-
-            userData = rawUserData["userInfo"]
-
-            # loop de coleta de id do banco
-
-            for i in userData:
-                name = i["info"]["name"]
-                userID = i["info"]["id"]
-                userChannel = i["info"]["channel"]
-                newStruct = i["info"]["struct"]["new_scene"]
-                updateStruct = i["info"]["struct"]["update_scene"]
-                endStruct = i["info"]["struct"]["end_scene"]
-
-        # caso tenha encontrado o usuário no banco, enviar mensagem
-
-        if (userFinded == userID) is True: 
-            specURL = mainURL + userChannel
-
-            if (infoStatus == "encerrada"):
-                print("delete!")
-                sceneType = endStruct
-
-                os.remove(f'./infoData/{page}.json')
-
-                message_text = f"{sceneType} `{infoChar} encerrou uma cena com {infoComp} em {infoLoc} no dia {infoDate_Data} às {infoDate_Time}.`"
-
-            elif (verifyRelevant == False):
-                print("new!")
-                sceneType = newStruct
-
-                message_text = f"{sceneType} `{infoChar} iniciou uma cena com {infoComp} em {infoLoc} no dia {infoDate_Data} às {infoDate_Time}. Essa é a cena {infoScene} de {infoChar}.`"
-
-            elif (verifyRelevant == True):
-                print("update!")
-                sceneType = updateStruct
-
-                message_text = f"{sceneType} `{infoChar} está com {infoComp} em {infoLoc} no dia {infoDate_Data} às {infoDate_Time}. Essa é a cena {infoScene} de {infoChar}.`"
-
-            else:
-                print("algo deu errado :(")
-
-            message = {
-                "content": f"{message_text}"
+            manager= {
+                "page": f"{page}",
+                "detalhes": {
+                    "edição": f"{lastTime}"
+                }
             }
 
-            # req = requests.post(specURL, message, headers=headers)
-            
-        # caso não encontrar usuário no banco
+            if os.path.isfile(f'./Manager/fileManager-{page}.json') is True:
+                isNew = False
 
-        else:
-            pass
+                with open (f'./Manager/fileManager-{page}.json', "r", encoding='utf8') as previousCheck:
+                    prevCheck = json.load(previousCheck)
 
-sendData()
+                isUpdated = (lastTime != (prevCheck["detalhes"]["edição"]))
+
+                if (isUpdated == True):
+                    os.remove(f'./Manager/fileManager-{page}.json')
+
+                    with open (f'./Manager/fileManager-{page}.json', "w", encoding='utf8') as infoManager:
+                        json.dump(manager, infoManager, ensure_ascii= False, indent= 4)
+
+                else:
+                    pass
+            else:
+                with open (f'./Manager/fileManager-{page}.json', "w", encoding='utf8') as infoManager:
+                    json.dump(manager, infoManager, ensure_ascii= False, indent= 4)
+
+        # caso precisar avisar, abertura para coleta de jogadores registrados
+        if (isUpdated == True or isNew == True):
+            with open('infoUsers.json', "r", encoding='utf8') as userFile:
+                rawUserData = json.load(userFile)
+
+                userData = rawUserData["userInfo"]
+
+                # loop de coleta de id do banco
+
+                for i in userData:
+                    name = i["info"]["name"]
+                    userID = i["info"]["id"]
+                    userChannel = i["info"]["channel"]
+                    newStruct = i["info"]["struct"]["new_scene"]
+                    updateStruct = i["info"]["struct"]["update_scene"]
+                    endStruct = i["info"]["struct"]["end_scene"]
+
+            # caso tenha encontrado o usuário no banco, enviar mensagem
+
+            if (userFinded == userID) is True: 
+                specURL = mainURL + userChannel
+
+                # cena encerrada + deletar arquivo de cena encerrada
+
+                if (infoStatus == "encerrada"):
+                    print("delete!")
+                    sceneType = endStruct
+
+                    os.remove(f'./infoData/{page}.json')
+
+                    message_text = f"{sceneType} `{infoChar} encerrou uma cena com {infoComp} em {infoLoc} no dia {infoDate_Data} às {infoDate_Time}.`"
+
+                # cena nova adicionada
+
+                elif (verifyRelevant == False):
+                    print("new!")
+                    sceneType = newStruct
+
+                    message_text = f"{sceneType} `{infoChar} iniciou uma cena com {infoComp} em {infoLoc} no dia {infoDate_Data} às {infoDate_Time}. Essa é a cena {infoScene} de {infoChar}.`"
+
+                # cena foi atualizada
+
+                elif (verifyRelevant == True):
+                    print("update!")
+                    sceneType = updateStruct
+
+                    message_text = f"{sceneType} `{infoChar} está com {infoComp} em {infoLoc} no dia {infoDate_Data} às {infoDate_Time}. Essa é a cena {infoScene} de {infoChar}.`"
+
+                else:
+                    print("algo deu errado :(")
+
+                message = {
+                    "content": f"{message_text}"
+                }
+
+                # req = requests.post(specURL, message, headers=headers)
+                
+            # caso não encontrar usuário no banco
+
+            else:
+                pass

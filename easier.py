@@ -33,13 +33,13 @@ class Embed:
 class DataCorreted:
     def __new__(self, date= str):
         self.separator = date.split("T")
-        self.dateAndMonth = self.separator[0]
+        self.dayAndMonth = self.separator[0]
         self.hoursRawAndDirty = self.separator[1]
         self.hoursCleaner = self.hoursRawAndDirty.split(".")
         self.hoursRaw = self.hoursCleaner[0]
         self.hoursOrganizer = self.hoursRaw.split(":")
         self.hoursAndMinuts = f"{self.hoursOrganizer[0]}:{self.hoursOrganizer[1]}"
-        self.solidAnswer = f"{self.dateAndMonth}/{self.hoursAndMinuts}"
+        self.solidAnswer = f"{self.dayAndMonth}/{self.hoursAndMinuts}"
 
         return self.solidAnswer
     

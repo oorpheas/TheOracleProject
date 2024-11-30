@@ -22,11 +22,8 @@
 # esse código tem como objetivo criar um bot para auxiliar  fun-
 # ções de moderação e divertimento em um servidor no Discord.
 #
-# se você está com acesso a esse cógido significa que meus estu-
-# dos deram certo  (ou eu sem querer fiz merda publicando  antes
-# da hora).
-#
-# ínicio: 04/04/2024.
+# ínicio: 04/04/2024;
+# funcionamento básico funcional: 29/11/2024;
 #
 # //
 
@@ -94,8 +91,6 @@ async def sceneSystem():
     
     else:
         pass
-
-
 
 
 # ping check !
