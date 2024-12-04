@@ -23,7 +23,7 @@
 # ções de moderação e divertimento em um servidor no Discord.
 #
 # ínicio: 04/04/2024;
-# funcionamento básico funcional: 29/11/2024;
+# funcionamento básico ativo: 29/11/2024;
 #
 # //
 
@@ -60,7 +60,7 @@ async def on_ready():
     await oracle.change_presence(activity=discord.activity.Game(name="aprendendo..."),
                                  status=discord.Status.online)
     
-    sceneSystem.start()
+    # sceneSystem.start()
 
     print(". . . . . . . . . . . . . . . . . . . . . . .")
     print(f"{oracle.user.name.upper()} está funcionando. ⚡")
@@ -68,14 +68,14 @@ async def on_ready():
 
 # loop de coleta de dados
 
-@tasks.loop(seconds=30)
+# @tasks.loop(seconds=60)
 async def sceneSystem():
+    os.system('clear')
 
     print(". . . . . . . . . . . . . . . . . . . . . . .")
     print("Módulo de Suporte está coletando dados. 📂")
 
     updateNeeded = NotionAPI.getData()
-    print(updateNeeded)
 
     print(". . . . . . . . . . . . . . . . . . . . . . .")
     print("Módulo de Suporte coletou dados 🗂️")
@@ -155,8 +155,13 @@ async def modrole(Oracle: Interaction, member: discord.Member , role: discord.Ro
 
 #
 
-#@oracle.tree.command(name="att", description="atualiza seu banco de dados para")
-#@commands.has_role(os.getenv('EQUIPE_ROLE_ID'))
+@oracle.tree.command(name="register", description="registra seu personagem no banco de dados da Oráculo")
+@commands.has_role(os.getenv('INTERNO_ROLE_ID'))
+async def register(Oracle: Interaction):
+
+    await Oracle.response.send_modal(easier.Formulario())
+
+
 
 # iniciador
 

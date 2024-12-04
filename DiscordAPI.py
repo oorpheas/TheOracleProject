@@ -134,6 +134,7 @@ def sendData():
                     sceneType = endStruct
 
                     os.remove(f'./infoData/{page}.json')
+                    os.remove(f'./Manager/fileManager-{page}.json')
 
                     message_text = f"{sceneType} `{infoChar} encerrou uma cena com {infoComp} em {infoLoc} no dia {infoDate_Data} às {infoDate_Time}.`"
 
@@ -160,7 +161,7 @@ def sendData():
                     "content": f"{message_text}"
                 }
 
-                # req = requests.post(specURL, message, headers=headers)
+                req = requests.post(specURL, message, headers=headers)
                 
             # caso não encontrar usuário no banco
 

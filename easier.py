@@ -2,11 +2,14 @@
 
 import discord
 import os
+import json
 
 # especificações de importação
 
 from datetime import datetime
 from dotenv import load_dotenv
+from discord import ui
+from discord import Interaction
 
 # carregar informações protegidas
 
@@ -58,3 +61,30 @@ class isTimeDifferentRelevant:
             isRelevant = True
 
         return isRelevant
+    
+class Formulario(discord.ui.Modal):
+    def __init__(self):
+        super().__init__(title = 'Registro')
+
+    name = discord.ui.TextInput(label='Nome Personagem', placeholder='Pedro Miguel')
+    pronouns = discord.ui.TextInput(label='Pronomes', placeholder='o/ele/dele/-o')
+    birthDay = discord.ui.TextInput(label='Data e Local de Nascimento', placeholder='dd/mm/aaaa. Cidade, Pais')
+    bloodInfo = discord.ui.TextInput(label='Tipo Sanguineo e Parentesco Divino', placeholder='O-. Filho de Atena')
+    ethinicInfo = discord.ui.TextInput(label='Etnia, Nacionalidade, Lingua Materna', placeholder='Branco, Brasileiro, Português-Brasileiro.')
+
+    async def on_submit(self, Oracle: discord.Interaction):
+
+        medicalRecords = {
+            "detalhes": {
+                "nome": f"{self.name}",
+                "pronomes": f"{self.pronouns}", 
+                "dados de Nascimento": f"{self.birthDay}",
+                "tipo sanguineo": f"{self.bloodInfo}",
+                "Informações Pessoais": f"{self.ethinicInfo}"
+                }
+        }
+
+        with open (f'./Register/{self.name}.json', "w", encoding='utf8') as records:
+            json.dump(medicalRecords, records, ensure_ascii= False, indent= 4)
+
+        await Oracle.response.send_message(f"{self.ass}, obrigada por adicionar seus dados no banco de dados! 📋")
