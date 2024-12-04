@@ -4,14 +4,8 @@
     3. Webhooks de Automação;
 
 
-[ COLUNAS NECESSÁRIAS AUTOMAÇÃO ]
-    1. Filtragem de Jogador;
-    2. Nome do Personagem;
-    3. Status da Cena (mudanças nesse status deve gerar uma mensagem);
-    4. Local da Cena;
-    5. Data da Cena;
-    6. Número da Cena;
-
-
-        dateAndTime = props["Dia e Hora"]["date"]["start"]
-        dateAndTime = datetime.fromisoformat(dateAndTime)
+Jahzell Khalid al-Filastini
+o/ele/dele/-o
+03/09/1999. Sherbrooke, Canada.
+AB-. Filho de Hermes.
+Marrom/Árabe. Canadense. Francês Canadense.
