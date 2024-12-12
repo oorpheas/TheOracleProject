@@ -62,19 +62,21 @@ class isTimeDifferentRelevant:
 
         return isRelevant
     
-class Formulario(discord.ui.Modal):
+class Formulario(ui.Modal):
     def __init__(self):
         super().__init__(title = 'Registro')
 
-    name = discord.ui.TextInput(label='Nome Personagem', placeholder='Pedro Miguel')
-    pronouns = discord.ui.TextInput(label='Pronomes', placeholder='o/ele/dele/-o')
-    birthDay = discord.ui.TextInput(label='Data e Local de Nascimento', placeholder='dd/mm/aaaa. Cidade, Pais')
-    bloodInfo = discord.ui.TextInput(label='Tipo Sanguineo e Parentesco Divino', placeholder='O-. Filho de Atena')
-    ethinicInfo = discord.ui.TextInput(label='Etnia, Nacionalidade, Lingua Materna', placeholder='Branco, Brasileiro, Português-Brasileiro.')
+    author = Interaction.user
+    name = ui.TextInput(label='Nome Personagem', placeholder='Pedro Miguel')
+    pronouns = ui.TextInput(label='Pronomes', placeholder='o/ele/dele/-o')
+    birthDay = ui.TextInput(label='Data e Local de Nascimento', placeholder='dd/mm/aaaa. Cidade, Pais')
+    bloodInfo = ui.TextInput(label='Tipo Sanguineo e Parentesco Divino', placeholder='O-. Filho de Atena')
+    ethinicInfo = ui.TextInput(label='Etnia, Nacionalidade, Lingua Materna', placeholder='Branco, Brasileiro, Português-Brasileiro.')
 
-    async def on_submit(self, Oracle: discord.Interaction):
+    async def on_submit(self, Oracle: Interaction):
 
         medicalRecords = {
+            "jogador:" f"{self.author}"
             "detalhes": {
                 "nome": f"{self.name}",
                 "pronomes": f"{self.pronouns}", 
